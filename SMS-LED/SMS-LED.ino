@@ -13,9 +13,9 @@
 /*************************************************************************/
 
 #include <SoftwareSerial.h>
-#include <string.h>
 
 SoftwareSerial mySerial(10,11); //
+#define DEBUG true
 
 String msg = String("");
 int SmsContentFlag = 0;
@@ -24,34 +24,26 @@ int ledPin = 13;
 //String SigQ[20];
 char SigQ[20];
 int value = 576;
-/*
- const int ledPin22 = 22;   // Number of the LED pin
- int ledState22 = LOW;    // ledState used to set the LED
-*/
+
 void setup()
 {
 //  pinMode(ledPin22, OUTPUT);
 
   pinMode( ledPin, OUTPUT ); 
   digitalWrite( ledPin, LOW ); 
-    
-  mySerial.begin(19200);    // the GPRS baud rate
-  
+     
+  mySerial.begin(19200);    // the GPRS baud rate  
   Serial.begin(19200);    // the GPRS baud rate 
-  delay(1000);
-  mySerial.print("\r");
-  delay(1000);
-  mySerial.print("AT+CMGF=1\r");    //Because we want to send the SMS in text mode
-  delay(1000);
-  mySerial.println("AT+CMGS=\"+4790057947\"");//send sms message, be careful need to add a country code before the cellphone number
-  delay(1000);
-  mySerial.println("A test message!");//the content of the message
-  delay(1000);
-  mySerial.print(value);   //int value
-  delay(1000);
+  
+  sendData("AT+CMGF=1",2000,DEBUG);//Because we want to send the SMS in text mode
+  delay(100);
+  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  delay(100);
+  sendData("Power on test message!",2000,DEBUG);//the content of the message
+  delay(100);
   mySerial.println((char)26);//the ASCII code of the ctrl+z is 26
-  delay(1000);
-  mySerial.println();
+  delay(100);
+  
 }
 
 
@@ -105,7 +97,7 @@ void GetSignalQuality(){
       }  
     }    
      Serial.print(response); 
-     Serial.println("Tips:+CSQ: XX,QQ : It means the Signal Quality poorly when the XX is '99'!");
+     Serial.println("Tips:+CSQ: XX,QQ : It means the Signal Quality poorly when the XX is less than 16!");
 }
 
 
@@ -113,18 +105,32 @@ void GetSignalQuality(){
 ///this function is to send a sms message
 void SendTextMessage()
 {
-  mySerial.print("AT+CMGF=1\r");    //Because we want to send the SMS in text mode
+  //message 1
+  sendData("AT+CMGF=1",2000,DEBUG);//Because we want to send the SMS in text mode
   delay(100);
-  mySerial.println("AT+CMGS=\"+4790057947\"");//send sms message, be careful need to add a country code before the cellphone number
+  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
-  mySerial.println("A test message!");//the content of the message
+  sendData("A test message1!",2000,DEBUG);//the content of the message
   delay(100);
   mySerial.println((char)26);//the ASCII code of the ctrl+z is 26
+  delay(5000);
+
+  //message 2
+  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
-  mySerial.println();
+  sendData("A test message2!",2000,DEBUG);//the content of the message
+  delay(100);
+  mySerial.println((char)26);//the ASCII code of the ctrl+z is 26
+  delay(5000);
+
+  //message 3
+  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  delay(100);
+  sendData("A test message3!",2000,DEBUG);//the content of the message
+  delay(100);
+  mySerial.println((char)26);//the ASCII code of the ctrl+z is 26
+  delay(5000);
   
-  //  ledState22 = HIGH;
-  //  digitalWrite(ledPin22,ledState22);
 }
 
 // EN: Make action based on the content of the SMS. 
@@ -216,4 +222,25 @@ void ProcessGprsMsg()
   // EN: Always clear the flag
   SmsContentFlag = 0; 
 }
+
+void sendData(String command, const int timeout, boolean debug)
+{
+    String response = "";    
+    mySerial.println(command); 
+    long int time = millis();
+    while( (time+timeout) > millis())
+    {
+      while(mySerial.available())
+      {       
+        char c = mySerial.read(); 
+        response+=c;
+      }  
+    }    
+    if(debug)
+    {
+      Serial.print(response);
+    }    
+    return response;
+}
+
 
