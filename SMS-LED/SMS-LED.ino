@@ -68,7 +68,7 @@ void loop()
           char SerialInByte;
           SerialInByte = (unsigned char)mySerial.read();
           Serial.print( SerialInByte );
-          if( SerialInByte == 13 )
+          if( SerialInByte==13||SerialInByte==14)
           {
             ProcessGprsMsg();
            }
