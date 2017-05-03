@@ -5,6 +5,8 @@
 //              Open your serial monitor,select 19200 baud.
 //              When you send "Q",the GSM signal quality will be return.
 //              If you send "T",SIM800 will send "A test message!" by SMS.
+//              If you send "S",SIM800 will show all message!
+//              If you send "D",SIM800 will delete all message!
 //For Mega2560: 
 //              You need to USE PIN 10(RX) and PIN 11(TX) as SoftwareSerial.
 //For UNO R3: 
@@ -34,7 +36,6 @@ void setup()
      
   mySerial.begin(19200);    // the GPRS baud rate  
   Serial.begin(19200);    // the GPRS baud rate 
-  
   sendData("AT+CMGF=1",2000,DEBUG);//Because we want to send the SMS in text mode
   delay(100);
   sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
@@ -43,16 +44,11 @@ void setup()
   delay(100);
   mySerial.println((char)26);//the ASCII code of the ctrl+z is 26
   delay(100);
-  
 }
 
 
 void loop()
 {
-  //after start up the program, you can using terminal to connect the serial of gprs shield,
-  //if you input 'Q' in the Serial Monitor, it will show the signal quality,
-  //if you input 'T' in the Serial Monitor, it will send a sms message,
-  
   if (Serial.available())     // This statement is never TRUE when receiving SMS
   switch(Serial.read())
   {
@@ -61,6 +57,12 @@ void loop()
     break;
     case 'T':
     SendTextMessage();
+    break;
+    case 'S':
+    ShowSMS();
+    break;
+    case 'D':
+    DeleteSMS();
     break;
   }
   else if(mySerial.available())
@@ -223,6 +225,20 @@ void ProcessGprsMsg()
   SmsContentFlag = 0; 
 }
 
+void ShowSMS(){
+  sendData("AT+CMGF=1",2000,DEBUG);
+  Serial.println("*** Show all SMS message ***");
+  sendData("AT+CMGL=\"ALL\"",5000,DEBUG);
+  Serial.println("***         END          ***");
+}
+
+void DeleteSMS(){
+  sendData("AT+CMGF=1",2000,DEBUG);
+  Serial.println("*** Delete all SMS message ***");
+  sendData("AT+CMGD=1,4",5000,DEBUG);
+  Serial.println("***         END            ***");
+}
+
 void sendData(String command, const int timeout, boolean debug)
 {
     String response = "";    
@@ -242,5 +258,3 @@ void sendData(String command, const int timeout, boolean debug)
     }    
     return response;
 }
-
-
