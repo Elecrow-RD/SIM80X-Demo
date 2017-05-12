@@ -7,6 +7,7 @@
 //              If you send "T",SIM800 will send "A test message!" by SMS.
 //              If you send "S",SIM800 will show all message!
 //              If you send "D",SIM800 will delete all message!
+//              If you send "R",the Serial moniter will get the  current time from SIM80x!
 //For Mega2560: 
 //              You need to USE PIN 10(RX) and PIN 11(TX) as SoftwareSerial.
 //For UNO R3: 
@@ -63,6 +64,9 @@ void loop()
     break;
     case 'D':
     DeleteSMS();
+    break;
+    case 'R':
+    ReadTime();
     break;
   }
   else if(mySerial.available())
@@ -236,6 +240,12 @@ void DeleteSMS(){
   sendData("AT+CMGF=1",2000,DEBUG);
   Serial.println("*** Delete all SMS message ***");
   sendData("AT+CMGD=1,4",5000,DEBUG);
+  Serial.println("***         END            ***");
+}
+
+void ReadTime(){
+  Serial.println("*** Read time for the SIM80x message ***");
+  sendData("AT+CCLK?",3000,DEBUG);
   Serial.println("***         END            ***");
 }
 
