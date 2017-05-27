@@ -158,6 +158,26 @@ void ProcessSms( String sms )
     Serial.println( "LED IS OFF" );
     return;
   }
+  if( sms.indexOf("Q") >= 0 ){
+    GetSignalQuality();
+    return;
+  }
+  if( sms.indexOf("T") >= 0 ){
+    SendTextMessage();
+    return;
+  }
+  if( sms.indexOf("S") >= 0 ){
+   ShowSMS();
+    return;
+  }
+  if( sms.indexOf("D") >= 0 ){
+   DeleteSMS();
+    return;
+  }
+  if( sms.indexOf("R") >= 0 ){
+    ReadTime();
+    return;
+  }
 }
 
 void GprsReadSmsStore( String SmsStorePos ){
