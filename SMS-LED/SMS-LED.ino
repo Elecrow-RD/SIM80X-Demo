@@ -39,7 +39,7 @@ void setup()
   Serial.begin(19200);    // the GPRS baud rate 
   sendData("AT+CMGF=1",2000,DEBUG);//Because we want to send the SMS in text mode
   delay(100);
-  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  sendData("AT+CMGS=\"+8**********8\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
   sendData("Power on test message!",2000,DEBUG);//the content of the message
   delay(100);
@@ -114,7 +114,7 @@ void SendTextMessage()
   //message 1
   sendData("AT+CMGF=1",2000,DEBUG);//Because we want to send the SMS in text mode
   delay(100);
-  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  sendData("AT+CMGS=\"+8**************8\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
   sendData("A test message1!",2000,DEBUG);//the content of the message
   delay(100);
@@ -122,7 +122,7 @@ void SendTextMessage()
   delay(5000);
 
   //message 2
-  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  sendData("AT+CMGS=\"+8**************8\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
   sendData("A test message2!",2000,DEBUG);//the content of the message
   delay(100);
@@ -130,7 +130,7 @@ void SendTextMessage()
   delay(5000);
 
   //message 3
-  sendData("AT+CMGS=\"+4790057947\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
+  sendData("AT+CMGS=\"+8**************8\"",2000,DEBUG);//send sms message, be careful need to add a country code before the cellphone number
   delay(100);
   sendData("A test message3!",2000,DEBUG);//the content of the message
   delay(100);
